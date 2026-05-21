@@ -1,7 +1,41 @@
 import streamlit as st
+import sqlite3
+import os
 
 from streamlit_oauth import OAuth2Component
 
+
+# CREATE DATABASE FOLDER
+os.makedirs("database", exist_ok=True)
+
+
+# CREATE SQLITE CONNECTION
+conn = sqlite3.connect(
+    "database/users.db",
+    check_same_thread=False
+)
+
+cursor = conn.cursor()
+
+
+# CREATE USERS TABLE
+cursor.execute(
+    """
+    CREATE TABLE IF NOT EXISTS users (
+
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        email TEXT,
+
+        name TEXT
+    )
+    """
+)
+
+conn.commit()
+
+
+# GOOGLE OAUTH
 CLIENT_ID = st.secrets["GOOGLE_CLIENT_ID"]
 
 CLIENT_SECRET = st.secrets["GOOGLE_CLIENT_SECRET"]
@@ -12,6 +46,7 @@ AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/auth"
 
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 
+
 oauth2 = OAuth2Component(
 
     CLIENT_ID,
@@ -19,6 +54,7 @@ oauth2 = OAuth2Component(
     AUTHORIZE_URL,
     TOKEN_URL
 )
+
 
 def login_signup():
 
@@ -42,6 +78,7 @@ def login_signup():
 
     st.write("")
 
+
     result = oauth2.authorize_button(
 
         name="🔵 Continue with Google",
@@ -59,6 +96,7 @@ def login_signup():
 
         use_container_width=True
     )
+
 
     if result:
 
