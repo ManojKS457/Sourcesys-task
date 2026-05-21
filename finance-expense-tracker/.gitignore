@@ -11,3 +11,5 @@ models/*.pkl
 data/expense_data.csv
 
 .ipynb_checkpoints/
+
+.streamlit/secrets.toml
